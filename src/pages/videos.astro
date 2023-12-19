@@ -1,0 +1,53 @@
+---
+import Layout from "../layouts/VideoLayout.astro";
+import Pagination from "../components/Pagination.astro";
+import type { IVideo } from "../interface";
+import jsonData from "../data/data-videos.json";
+
+let lastPage;
+let currentPage;
+let showData:any;
+
+if (Astro.request.method === "GET") {
+  const url = new URL(Astro.request.url);
+  const urlSearchParams = new URLSearchParams(url.searchParams);
+  const numPage = urlSearchParams.get("page") || "1";
+  const data = Object.values(jsonData).sort((a, b) => a.posicion - b.posicion);
+  lastPage = Math.ceil(data.length / 12).toString();
+  currentPage = numPage;
+  const numPagForPagination = (Number(numPage)-1) * 12
+  showData = data.splice( numPagForPagination , 12 );
+}
+---
+
+<Layout title="Videos">
+  <div class="2xl:mx-52 lg:mx-32 md:mx-24">
+    <div class="md:flex md:justify-between">
+      <div class="my-auto text-2xl">ALL VIDEOS</div>
+      <Pagination length={Number(lastPage)} currentPage={Number(currentPage)}  />
+    </div>
+    <div class="grid 2xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-4">
+      {
+        showData.map((video: IVideo) => (
+          <div class="video-item">
+            <a href={video.url_video}>
+              <img
+                src={ video.url_imagen}
+                alt="imagen video"
+                class="mx-auto duration-500 md:hover:scale-105 cursor-pointer"
+              />
+            </a>
+            <div class="text-yellow-400 mt-2 text-xl cursor-auto hover:underline">
+              <a href={video.url_video}>{video.title}</a>
+            </div>
+            <div class="my-1 hover:underline">
+              <a href={video.url_video}>{video.stars}</a>
+            </div>
+            <div class="hover:underline">{video.date}</div>
+          </div>
+        ))
+      }
+    </div>
+    <Pagination length={Number(lastPage)} currentPage={Number(currentPage)} />
+  </div>
+</Layout>

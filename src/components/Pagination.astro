@@ -1,0 +1,85 @@
+---
+const { length, currentPage } = Astro.props;
+const paginationList = Array.from({ length: length }, (_, i) => i+1 ).slice(Math.max(currentPage-3,0),Math.min(currentPage+2,length+1));
+---
+
+<nav aria-label="Blog pages" class="my-4 flex">
+    {
+        currentPage != 1 ? (
+            <>
+                <a
+                    class="bg-[#1b1c1d] hover:bg-[#3d3e3f] text-white font-bold py-2 px-4 rounded-l-lg"
+                    href={`/videos?page=${1}`}
+                >
+                    {"<<"}
+                </a>
+                <a
+                    class="bg-[#1b1c1d] hover:bg-[#3d3e3f] text-white font-bold py-2 px-4"
+                    href={`/videos?page=${currentPage - 1}`}
+                >
+                    {"<"}
+                </a>
+            </>
+        ) : (
+            <>
+                <a class="bg-[#1b1c1d] text-white font-bold py-2 px-4 rounded-l-lg cursor-pointer">
+                    {"<<"}
+                </a>
+                <a class="bg-[#1b1c1d] text-white font-bold py-2 px-4 cursor-pointer">
+                    {"<"}
+                </a>
+            </>
+        )
+    }
+    {
+        paginationList.map((num) =>
+            num != currentPage ? (
+                <a
+                    class="bg-[#1b1c1d] hover:bg-[#3d3e3f] text-white font-bold py-2 px-4"
+                    href={`/videos?page=${num}`}
+                >
+                    {num}
+                </a>
+            ) : (
+                <a
+                    class="bg-[#3d3e3f] text-white font-bold py-2 px-4 cursor-pointer"
+                >
+                    {num}
+                </a>
+            )
+        )
+    }
+    {
+        currentPage != length ? (
+            <>
+                <a
+                    class="bg-[#1b1c1d] hover:bg-[#3d3e3f] text-white font-bold py-2 px-4"
+                    href={`/videos?page=${currentPage + 1}`}
+                >
+                    {">"}
+                </a>
+                <a
+                    class="bg-[#1b1c1d] hover:bg-[#3d3e3f] text-white font-bold py-2 px-4 rounded-r-lg"
+                    href={`/videos?page=${length}`}
+                >
+                    {">>"}
+                </a>
+            </>
+        )
+        :
+        (
+            <>
+                <a
+                    class="bg-[#1b1c1d] text-white font-bold py-2 px-4 cursor-pointer"
+                >
+                    {">"}
+                </a>
+                <a
+                    class="bg-[#1b1c1d] text-white font-bold py-2 px-4 rounded-r-lg cursor-pointer"
+                >
+                    {">>"}
+                </a>
+            </>
+        )
+    }
+</nav>
